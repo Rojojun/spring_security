@@ -19,6 +19,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     // JSON으로 파싱하기 위한 객체
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    // 필터의 작동 조건
     public AjaxLoginProcessingFilter() {
         super(new AntPathRequestMatcher("/api/login"));
     }
@@ -26,7 +27,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException {
 
-        if (isAjax(httpServletRequest)){
+        if (!isAjax(httpServletRequest)){
             throw new IllegalStateException("Authentication을 지원하지 않습니다.");
         }
 
@@ -41,6 +42,7 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
         return getAuthenticationManager().authenticate(ajaxAuthenticationToken);
     }
 
+    // Ajax인지 아닌지에 대한 기준 판단
     private boolean isAjax(HttpServletRequest request){
         if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
             return true;
